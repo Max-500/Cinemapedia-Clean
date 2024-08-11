@@ -4,7 +4,7 @@ import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class MoviesHorizontalListview extends StatelessWidget {
+class MoviesHorizontalListview extends StatefulWidget {
 
   final List<Movie> movies;
   final String? title;
@@ -15,21 +15,52 @@ class MoviesHorizontalListview extends StatelessWidget {
   const MoviesHorizontalListview({super.key, required this.movies, this.title, this.subtitle, this.loadNextPage});
 
   @override
+  State<MoviesHorizontalListview> createState() => _MoviesHorizontalListviewState();
+}
+
+class _MoviesHorizontalListviewState extends State<MoviesHorizontalListview> {
+
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController.addListener(() {
+
+      if( widget.loadNextPage == null ) return;
+
+      if( ( scrollController.position.pixels + 250 ) >= scrollController.position.maxScrollExtent ) {
+        widget.loadNextPage!();
+      }
+
+    });
+
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 400,
       child: Column(
         children: [
-          if(title != null || subtitle != null)
-            _Title(title: title, subtitle: subtitle,),
+          if(widget.title != null || widget.subtitle != null)
+            _Title(title: widget.title, subtitle: widget.subtitle,),
 
           Expanded(
             child: ListView.builder(
+              controller: scrollController,
               scrollDirection: Axis.horizontal,
               physics: const ClampingScrollPhysics(),
-              itemCount: movies.length,
+              itemCount: widget.movies.length,
               itemBuilder: (context, index) {
-                return _SlideItem(movie: movies[index]);
+                return _SlideItem(movie: widget.movies[index]);
               },
             )
           )
