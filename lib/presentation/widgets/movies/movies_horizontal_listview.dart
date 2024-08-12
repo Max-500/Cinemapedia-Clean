@@ -60,7 +60,7 @@ class _MoviesHorizontalListviewState extends State<MoviesHorizontalListview> {
               physics: const ClampingScrollPhysics(),
               itemCount: widget.movies.length,
               itemBuilder: (context, index) {
-                return _SlideItem(movie: widget.movies[index]);
+                return FadeInRight(child: _SlideItem(movie: widget.movies[index]));
               },
             )
           )
