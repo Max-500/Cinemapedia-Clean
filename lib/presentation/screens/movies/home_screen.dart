@@ -30,6 +30,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   void initState() {
     super.initState();
     ref.read( nowPlayingMoviesProvider.notifier ).loadNextPage();
+    ref.read( popularMoviesProvider.notifier ).loadNextPage();
   }
 
   @override
@@ -53,7 +54,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                 children: [
                   MoviesSlideshow(movies: slideShowMovies),
                   MoviesHorizontalListview(movies: nowPlayingMovies, title: 'En Cines', subtitle: 'Lunes 20', loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),),
-                  MoviesHorizontalListview(movies: nowPlayingMovies, title: 'En Cines', subtitle: 'Lunes 20', loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),),
+                  MoviesHorizontalListview(movies: nowPlayingMovies, title: 'Populares', subtitle: 'Lunes 20', loadNextPage: () => ref.read(popularMoviesProvider.notifier).loadNextPage(),),
                   MoviesHorizontalListview(movies: nowPlayingMovies, title: 'En Cines', subtitle: 'Lunes 20', loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),)
                 ],
               );
