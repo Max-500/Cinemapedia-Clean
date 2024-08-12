@@ -31,12 +31,15 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     super.initState();
     ref.read( nowPlayingMoviesProvider.notifier ).loadNextPage();
     ref.read( popularMoviesProvider.notifier ).loadNextPage();
+    ref.read( upcomingMoviesProvider.notifier ).loadNextPage();
+    ref.read( topRatedMoviesProvider.notifier ).loadNextPage();
   }
 
   @override
   Widget build(BuildContext context) {
     final nowPlayingMovies = ref.watch(nowPlayingMoviesProvider);
-
+    final upcomingMovies = ref.watch(upcomingMoviesProvider);
+    final topRatedMovies =  ref.watch(topRatedMoviesProvider);
 
     final slideShowMovies = ref.read(moviesSlideShowProvider);
 
@@ -55,7 +58,9 @@ class _HomeViewState extends ConsumerState<_HomeView> {
                   MoviesSlideshow(movies: slideShowMovies),
                   MoviesHorizontalListview(movies: nowPlayingMovies, title: 'En Cines', subtitle: 'Lunes 20', loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),),
                   MoviesHorizontalListview(movies: nowPlayingMovies, title: 'Populares', subtitle: 'Lunes 20', loadNextPage: () => ref.read(popularMoviesProvider.notifier).loadNextPage(),),
-                  MoviesHorizontalListview(movies: nowPlayingMovies, title: 'En Cines', subtitle: 'Lunes 20', loadNextPage: () => ref.read(nowPlayingMoviesProvider.notifier).loadNextPage(),)
+                  MoviesHorizontalListview(movies: upcomingMovies, title: 'Proximamente', subtitle: 'Lunes 20', loadNextPage: () => ref.read(upcomingMoviesProvider.notifier).loadNextPage(),),
+                  MoviesHorizontalListview(movies: topRatedMovies, title: 'Mejores Valorados', subtitle: 'Lunes 20', loadNextPage: () => ref.read(topRatedMoviesProvider.notifier).loadNextPage(),)
+
                 ],
               );
             },
