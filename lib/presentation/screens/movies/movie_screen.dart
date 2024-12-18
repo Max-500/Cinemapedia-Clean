@@ -1,8 +1,9 @@
 import 'package:cinemapedia/domain/entities/movie.dart';
-import 'package:cinemapedia/presentation/providers/movies/movie_details_provider.dart';
 import 'package:cinemapedia/presentation/widgets/shared/full_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../providers/providers.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
   static const name = 'movie-screen';
@@ -21,6 +22,7 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
   void initState() {
     super.initState();
     ref.read(movieInfoProvider.notifier).loadMovie(widget.movieId);
+    ref.read(actorByMovieProvider.notifier).loadActors(widget.movieId);
   }
 
   @override
@@ -52,8 +54,6 @@ class _MovieDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
     final textStyles = Theme.of(context).textTheme;
 
     return Column(
@@ -100,8 +100,49 @@ class _MovieDetails extends StatelessWidget {
               )
             ],
           ),
-        )
+        ),
+
+        _ActorsByMovie(movieID: movie.id),
+        const SizedBox(height: 25)
       ],
+    );
+  }
+}
+
+class _ActorsByMovie extends ConsumerWidget {
+  final int movieID;
+
+  const _ActorsByMovie({required this.movieID});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final actorsByMovie = ref.watch(actorByMovieProvider)[movieID.toString()];
+
+    if(actorsByMovie == null) return const FullLoader();
+
+    final actors = actorsByMovie;
+
+    return SizedBox(
+      height: 300,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: actors.length,
+        itemBuilder: (context, index) => Container(
+          padding: const EdgeInsets.all(8),
+          width: 135,
+          child: Column(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.network(actors[index].profilePath, height: 180, width: 135, fit: BoxFit.cover),
+              ),
+              const SizedBox(height: 5),
+              Text(actors[index].name, maxLines: 2),
+              Text(actors[index].character ?? 'Unkown', maxLines: 2, style: const TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis))
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -143,7 +184,6 @@ class _CustomSliverAppBar extends StatelessWidget {
             )
           ],
         ),
-        title: Text(movie.title, style: const TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.start,),
       ),
     );
   }
