@@ -4,3 +4,4 @@ export 'movies/movies_repository_providers.dart';
 export 'movies/movies_slideshow_provider.dart';
 export 'actors/actors_by_movie_provider.dart';
 export 'movies/movie_details_provider.dart';
+export 'searchs/search_movies_provider.dart';
